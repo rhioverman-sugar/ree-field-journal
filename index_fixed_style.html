@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f6f1e8">
+<title>Ree's Field Journal</title>
+<style>
+:root{--bg:#f6f1e8;--card:#fffdf8;--ink:#26241f;--muted:#706b62;--accent:#556b50;--line:#ddd5c7;--soft:#e8efe4;--danger:#a34c45}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.wrap{max-width:820px;margin:auto;padding:18px 14px 80px} h1{margin:4px 0;font-size:30px}.sub{color:var(--muted);margin-bottom:16px}
+.tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;position:sticky;top:0;background:rgba(246,241,232,.96);padding:8px 0;z-index:3;backdrop-filter:blur(8px)}
+.tab{padding:10px 4px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink);font-weight:700;font-size:13px;text-align:center}
+.tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.page{display:none;margin-top:10px}.page.active{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:12px}
+label{display:block;font-weight:700;font-size:13px;margin:12px 0 6px}
+input,textarea,select{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;font:inherit;background:white;color:var(--ink)}
+textarea{min-height:88px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button{width:100%;padding:12px;border:0;border-radius:12px;background:var(--accent);color:white;font-weight:800;margin-top:12px}
+button.alt{background:white;color:var(--ink);border:1px solid var(--line)}
+.note{background:var(--soft);padding:12px;border-radius:12px}.small{font-size:12px;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#eef3ea;padding:13px 10px;border-radius:14px;text-align:center;border:1px solid #dfe7da}
+.stat b{display:block;font-size:26px;line-height:1.1}.stat span{font-size:11px;color:var(--muted)}
+.item{border-top:1px solid var(--line);padding:11px 0}.item:first-child{border-top:0}.meta{font-size:12px;color:var(--muted);margin-top:3px}
+.good{color:var(--accent);font-weight:700}.bad{color:var(--danger);font-weight:700}
+details{border-top:1px solid var(--line);padding:10px 0}summary{font-weight:800;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Ree’s Field Journal 🌿</h1>
+<div class="sub">Food, protein, movement, strength, and the slow accumulation of evidence.</div>
+
+<div class="tabs">
+<button class="tab active" data-page="today">Today</button>
+<button class="tab" data-page="food">Food</button>
+<button class="tab" data-page="workout">Workout</button>
+<button class="tab" data-page="checkin">Check-in</button>
+<button class="tab" data-page="history">History</button>
+</div>
+
+<section id="today" class="page active">
+<div class="card">
+<h2>Today</h2>
+<div class="stats">
+<div class="stat"><b id="todayCalories">0</b><span>calories · goal 1,550–1,750</span></div>
+<div class="stat"><b><span id="todayProtein">0</span> g</b><span>protein · goal 100 g</span></div>
+<div class="stat"><b><span id="todayWater">0</span></b><span>cups water</span></div>
+<div class="stat"><b><span id="todayWorkouts">0</span></b><span>workouts</span></div>
+</div>
+</div>
+
+<div class="card">
+<h2>Water 💧</h2>
+<div class="row"><button onclick="changeWater(1)">+ 1 cup</button><button class="alt" onclick="changeWater(-1)">− 1 cup</button></div>
+</div>
+
+<div class="card">
+<h2>Today’s meals</h2>
+<div id="todayMeals" class="small">Nothing logged yet.</div>
+</div>
+</section>
+
+<section id="food" class="page">
+<div class="card">
+<h2>Log food</h2>
+<label>Date</label><input type="date" id="foodDate">
+<label>Saved meal / food</label>
+<select id="foodPreset" onchange="updateEstimate()">
+<option value="">Custom / not listed</option>
+<option value="usual_breakfast">Usual breakfast · oatmeal + fruit + buttered toast</option>
+<option value="tuna_salad">Tuna salad · salad + albacore tuna packet</option>
+<option value="protein_shake">Usual protein shake</option>
+<option value="oatmeal">Oatmeal · 1 cup cooked</option>
+<option value="berries">Mixed fruit / berries · 1 cup</option>
+<option value="sourdough">Sourdough · 1 slice</option>
+<option value="multigrain">Multigrain bread · 1 slice</option>
+<option value="butter">Butter · 1 tsp</option>
+<option value="greek_yogurt">Plain Greek yogurt · 2 tbsp</option>
+<option value="protein_powder">Protein powder · 1 serving</option>
+<option value="flaxseed">Ground flaxseed · 1 tbsp</option>
+<option value="tuna_packet">Albacore tuna packet · 1 packet</option>
+<option value="cottage_cheese">Cottage cheese · 1 cup</option>
+<option value="chicken">Cooked chicken breast · 3 oz</option>
+<option value="tortilla">Flour tortilla · 1 medium</option>
+<option value="ranch">Ranch · 2 tbsp</option>
+<option value="fries">French fries · 1 medium serving</option>
+<option value="party_burrito">Taco Bueno Party Burrito · 1</option>
+<option value="muchaco_beans">Muchaco, no meat + extra beans · 1</option>
+</select>
+<div class="row"><div><label>Quantity</label><input type="number" id="foodQty" value="1" min=".25" step=".25" oninput="updateEstimate()"></div>
+<div><label>Meal</label><select id="meal"><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option><option>Shake</option><option>Drink</option></select></div></div>
+<label>Description</label><textarea id="foodText" placeholder="Optional note, or describe a custom food"></textarea>
+<div class="note">Estimated: <strong><span id="estCalories">0</span> cal</strong> · <strong><span id="estProtein">0</span> g protein</strong></div>
+<div id="customNutrition">
+<div class="row"><div><label>Custom calories</label><input type="number" id="customCalories" min="0" oninput="updateEstimate()"></div>
+<div><label>Custom protein (g)</label><input type="number" id="customProtein" min="0" oninput="updateEstimate()"></div></div>
+</div>
+<button onclick="saveFood()">Save food</button>
+<div id="foodStatus" class="small"></div>
+</div>
+</section>
+
+<section id="workout" class="page">
+<div class="card">
+<h2>Log workout</h2>
+<label>Date</label><input type="date" id="workoutDate">
+<label>What did you do?</label><textarea id="workoutText"></textarea>
+<div class="row"><div><label>Push-ups</label><input type="number" id="pushups" min="0"></div><div><label>Squats</label><input type="number" id="squats" min="0"></div></div>
+<div class="row"><div><label>Dumbbell reps</label><input type="number" id="dumbbellReps" min="0"></div><div><label>Best push-up set</label><input type="number" id="bestPushupSet" min="0"></div></div>
+<div class="row"><div><label>Minutes</label><input type="number" id="minutes" min="0"></div><div><label>Effort</label><select id="effort"><option>Easy</option><option selected>Moderate</option><option>Hard</option></select></div></div>
+<label>How did it feel?</label><input id="feel">
+<button onclick="saveWorkout()">Save workout</button>
+<div id="workoutStatus" class="small"></div>
+</div>
+</section>
+
+<section id="checkin" class="page">
+<div class="card">
+<h2>Body check-in</h2>
+<label>Date</label><input type="date" id="checkinDate">
+<div class="row"><div><label>Weight (lb)</label><input type="number" step=".1" id="weight"></div><div><label>Waist (in)</label><input type="number" step=".1" id="waist"></div></div>
+<div class="row"><div><label>Hips (in)</label><input type="number" step=".1" id="hips"></div><div><label>Energy 1–5</label><input type="number" min="1" max="5" id="energy"></div></div>
+<label>Notes</label><textarea id="notes"></textarea>
+<button onclick="saveCheckin()">Save check-in</button>
+<div id="checkinStatus" class="small"></div>
+</div>
+</section>
+
+<section id="history" class="page">
+<div class="card"><h2>Daily nutrition totals</h2><div id="nutritionHistory"></div></div>
+<div class="card"><h2>Workout totals 💪</h2><div id="workoutTotals"></div><div id="workoutHistory"></div></div>
+<div class="card"><h2>Measurements history 📏</h2><div id="measurementHistory"></div></div>
+<div class="card"><h2>Water history 💧</h2><div id="waterHistory"></div></div>
+<div class="card">
+<h2>Backup & restore</h2>
+<p class="small">Your journal data stays in this browser on this device. Export backups regularly.</p>
+<button onclick="exportBackup()">Export Backup</button>
+<label for="backupFile" style="display:block;width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:white;font-weight:800;text-align:center;margin-top:10px">Import Backup</label>
+<input id="backupFile" type="file" accept=".json,application/json" style="display:none" onchange="importBackup(event)">
+<div id="backupStatus" class="small"></div>
+</div>
+</section>
+</div>
+
+<script>
+const KEY='ree_field_journal_online_v1';
+const WATER_KEY='ree_field_journal_water_online_v1';
+
+const FOOD_LIBRARY={
+usual_breakfast:{name:'Usual breakfast: oatmeal with fruit + 1 slice buttered toast',cal:430,protein:11,meal:'Breakfast'},
+tuna_salad:{name:'Tuna salad: salad + 1 packet albacore tuna',cal:300,protein:27,meal:'Lunch'},
+protein_shake:{name:'Usual protein shake: protein powder + plain Greek yogurt + frozen fruit',cal:260,protein:28,meal:'Shake'},
+oatmeal:{name:'Oatmeal, cooked · 1 cup',cal:160,protein:6},berries:{name:'Mixed fruit / berries · 1 cup',cal:80,protein:1},
+sourdough:{name:'Sourdough bread · 1 slice',cal:120,protein:4},multigrain:{name:'Multigrain bread · 1 slice',cal:100,protein:4},
+butter:{name:'Butter · 1 tsp',cal:34,protein:0},greek_yogurt:{name:'Plain Greek yogurt · 2 tbsp',cal:30,protein:3},
+protein_powder:{name:'Protein powder · 1 serving',cal:120,protein:24},flaxseed:{name:'Ground flaxseed · 1 tbsp',cal:37,protein:1},
+tuna_packet:{name:'Albacore tuna packet · 1',cal:100,protein:22},cottage_cheese:{name:'Cottage cheese · 1 cup',cal:220,protein:25},
+chicken:{name:'Cooked chicken breast · 3 oz',cal:140,protein:26},tortilla:{name:'Flour tortilla · 1 medium',cal:140,protein:4},
+ranch:{name:'Ranch · 2 tbsp',cal:130,protein:1},fries:{name:'French fries · 1 medium serving',cal:365,protein:4},
+party_burrito:{name:'Taco Bueno Party Burrito · 1',cal:340,protein:12},muchaco_beans:{name:'Muchaco, no meat + extra beans · 1',cal:430,protein:15}
+};
+
+function todayISO(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch{return []}}
+function save(a){localStorage.setItem(KEY,JSON.stringify(a))}
+function loadWater(){try{return JSON.parse(localStorage.getItem(WATER_KEY))||{}}catch{return {}}}
+function saveWater(x){localStorage.setItem(WATER_KEY,JSON.stringify(x))}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
+document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+b.classList.add('active');document.getElementById(b.dataset.page).classList.add('active');renderAll();
+}));
+
+function setDates(){['foodDate','workoutDate','checkinDate'].forEach(id=>document.getElementById(id).value=todayISO())}
+
+function updateEstimate(){
+const preset=foodPreset.value, qty=parseFloat(foodQty.value)||1;
+let cal=0,p=0;
+if(preset&&FOOD_LIBRARY[preset]){
+const x=FOOD_LIBRARY[preset];cal=x.cal*qty;p=x.protein*qty;customNutrition.style.display='none';
+if(x.meal)meal.value=x.meal;
+}else{
+customNutrition.style.display='block';
+cal=(parseFloat(customCalories.value)||0)*qty;p=(parseFloat(customProtein.value)||0)*qty;
+}
+estCalories.textContent=Math.round(cal);estProtein.textContent=Math.round(p);
+}
+
+function saveFood(){
+const preset=foodPreset.value,qty=parseFloat(foodQty.value)||1;
+let text=foodText.value.trim(),cal=0,p=0;
+if(preset&&FOOD_LIBRARY[preset]){const x=FOOD_LIBRARY[preset];if(!text)text=x.name;cal=Math.round(x.cal*qty);p=Math.round(x.protein*qty)}
+else{if(!text)return;cal=Math.round((parseFloat(customCalories.value)||0)*qty);p=Math.round((parseFloat(customProtein.value)||0)*qty)}
+const a=load();a.push({type:'Food',date:foodDate.value||todayISO(),meal:meal.value,text,quantity:qty,calories:cal,protein:p,savedAt:new Date().toISOString()});save(a);
+foodStatus.textContent='Saved.';foodText.value='';renderAll();
+}
+
+function saveWorkout(){
+const text=workoutText.value.trim();if(!text)return;
+const a=load();a.push({type:'Workout',date:workoutDate.value||todayISO(),text,pushups:+pushups.value||0,squats:+squats.value||0,dumbbellReps:+dumbbellReps.value||0,bestPushupSet:+bestPushupSet.value||0,minutes:+minutes.value||0,effort:effort.value,feel:feel.value,savedAt:new Date().toISOString()});save(a);
+workoutStatus.textContent='Saved.';renderAll();
+}
+
+function saveCheckin(){
+const a=load();a.push({type:'Check-in',date:checkinDate.value||todayISO(),weight:+weight.value||null,waist:+waist.value||null,hips:+hips.value||null,energy:+energy.value||null,notes:notes.value,savedAt:new Date().toISOString()});save(a);
+checkinStatus.textContent='Saved.';renderAll();
+}
+
+function changeWater(n){const d=loadWater(),k=todayISO();d[k]=Math.max(0,(d[k]||0)+n);saveWater(d);renderAll()}
+
+function renderToday(){
+const t=todayISO(),foods=load().filter(x=>x.type==='Food'&&x.date===t),workouts=load().filter(x=>x.type==='Workout'&&x.date===t);
+const cal=foods.reduce((s,x)=>s+(+x.calories||0),0),p=foods.reduce((s,x)=>s+(+x.protein||0),0);
+todayCalories.textContent=Math.round(cal);todayProtein.textContent=Math.round(p);todayWater.textContent=loadWater()[t]||0;todayWorkouts.textContent=workouts.length;
+todayMeals.innerHTML=foods.length?foods.map(x=>`<div class="item"><b>${esc(x.meal||'Food')}</b><div>${esc(x.text)}</div><div class="meta">${x.calories||0} cal · ${x.protein||0} g protein</div></div>`).join(''):'Nothing logged yet.';
+}
+
+function renderHistory(){
+const a=load();
+const foods=a.filter(x=>x.type==='Food'), by={};
+foods.forEach(x=>{by[x.date]??={cal:0,p:0};by[x.date].cal+=+x.calories||0;by[x.date].p+=+x.protein||0});
+nutritionHistory.innerHTML=Object.keys(by).sort().reverse().map(d=>`<div class="item"><b>${esc(d)}</b><div class="meta">${Math.round(by[d].cal)} calories · ${Math.round(by[d].p)} g protein</div></div>`).join('')||'<div class="small">No nutrition history yet.</div>';
+
+const ws=a.filter(x=>x.type==='Workout'),sum=k=>ws.reduce((s,x)=>s+(+x[k]||0),0),best=Math.max(0,...ws.map(x=>+x.bestPushupSet||0));
+workoutTotals.innerHTML=`<div class="stats"><div class="stat"><b>${ws.length}</b><span>workouts</span></div><div class="stat"><b>${sum('pushups')}</b><span>push-ups</span></div><div class="stat"><b>${sum('squats')}</b><span>squats</span></div><div class="stat"><b>${best}</b><span>best push-up set</span></div></div>`;
+workoutHistory.innerHTML=ws.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(x=>`<div class="item"><b>${esc(x.date)} · ${esc(x.text)}</b><div class="meta">${x.pushups||0} push-ups · ${x.squats||0} squats · ${x.dumbbellReps||0} dumbbell reps${x.minutes?` · ${x.minutes} min`:''}</div></div>`).join('')||'<div class="small">No workout history yet.</div>';
+
+const cs=a.filter(x=>x.type==='Check-in').sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+measurementHistory.innerHTML=cs.map(x=>`<div class="item"><b>${esc(x.date)}</b><div class="meta">${x.weight?`${x.weight} lb · `:''}${x.waist?`waist ${x.waist} in · `:''}${x.hips?`hips ${x.hips} in`:''}</div></div>`).join('')||'<div class="small">No measurements yet.</div>';
+
+const w=loadWater();
+waterHistory.innerHTML=Object.keys(w).sort().reverse().map(d=>`<div class="item"><b>${esc(d)}</b><div class="meta">${w[d]} cups</div></div>`).join('')||'<div class="small">No water history yet.</div>';
+}
+
+function exportBackup(){
+const data={app:'Ree Field Journal',version:2,exportedAt:new Date().toISOString(),entries:load(),water:loadWater()};
+const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),u=URL.createObjectURL(blob),a=document.createElement('a');
+a.href=u;a.download=`ree-field-journal-backup-${todayISO()}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(u),500);backupStatus.textContent='Backup exported.';
+}
+
+function importBackup(e){
+const f=e.target.files?.[0];if(!f)return;const r=new FileReader();
+r.onload=()=>{try{const d=JSON.parse(r.result);const entries=Array.isArray(d)?d:d.entries;if(!Array.isArray(entries))throw 0;save(entries);if(d.water&&typeof d.water==='object')saveWater(d.water);backupStatus.textContent='Backup imported successfully.';renderAll()}catch{backupStatus.textContent='Could not import that backup.'}e.target.value=''};
+r.readAsText(f);
+}
+
+function renderAll(){renderToday();renderHistory()}
+setDates();updateEstimate();renderAll();
+</script>
+</body>
+</html>
